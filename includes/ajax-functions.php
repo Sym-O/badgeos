@@ -9,6 +9,20 @@
  * @link https://credly.com
  */
 
+function custom_render_achievement ( $achievement ){
+
+    global $layout;
+
+    if ( isset($layout) )
+        if ( $layout == 'grid' ){
+            $achievement = str_replace("badgeos-achievements-list-item", "badgeos-achievements-grid-item", $achievement);
+            $achievement = str_replace('height="100"', '', $achievement);
+            $achievement = str_replace('width="100"', '', $achievement);
+            //$achievement = str_replace("100x100", "150x150", $achievement);
+    }
+
+    return $achievement;
+}
 // Setup our badgeos AJAX actions
 $badgeos_ajax_actions = array(
 	'get-achievements',
@@ -33,7 +47,7 @@ foreach ( $badgeos_ajax_actions as $action ) {
  * @return void
  */
 function badgeos_ajax_get_achievements() {
-	global $user_ID, $blog_id;
+	global $user_ID, $blog_id, $layout;
 
 	// Setup our AJAX query vars
 	$type       = isset( $_REQUEST['type'] )       ? $_REQUEST['type']       : false;
@@ -50,6 +64,7 @@ function badgeos_ajax_get_achievements() {
 	$exclude    = isset( $_REQUEST['exclude'] )    ? $_REQUEST['exclude']    : array();
 	$meta_key   = isset( $_REQUEST['meta_key'] )   ? $_REQUEST['meta_key']   : '';
 	$meta_value = isset( $_REQUEST['meta_value'] ) ? $_REQUEST['meta_value'] : '';
+    $layout     = isset( $_REQUEST['layout'] )     ? $_REQUEST['layout']     : 'list';
 
 	// Convert $type to properly support multiple achievement types
 	if ( 'all' == $type ) {
