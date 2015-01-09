@@ -224,11 +224,7 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 	$badges .= '</div><!-- #badgeos-achievements-filters-wrap -->';
 
 	// Content Container
-    if ( 'grid' == $layout ) {
-        $badges .= '<div id="badgeos-achievements-container" class="badgeos-achievements-grid-columns-4"></div>';
-    }else{
-        $badges .= '<div id="badgeos-achievements-container"></div>';
-    }
+    $badges .= '<div id="badgeos-achievements-container"></div>'; 
 
 	// Hidden fields and Load More button
 	$badges .= '<input type="hidden" id="badgeos_layout" value="'.$layout.'">';

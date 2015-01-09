@@ -9,20 +9,6 @@
  * @link https://credly.com
  */
 
-function custom_render_achievement ( $achievement ){
-
-    global $layout;
-
-    if ( isset($layout) )
-        if ( $layout == 'grid' ){
-            $achievement = str_replace("badgeos-achievements-list-item", "badgeos-achievements-grid-item", $achievement);
-            $achievement = str_replace('height="100"', '', $achievement);
-            $achievement = str_replace('width="100"', '', $achievement);
-            //$achievement = str_replace("100x100", "150x150", $achievement);
-    }
-
-    return $achievement;
-}
 // Setup our badgeos AJAX actions
 $badgeos_ajax_actions = array(
 	'get-achievements',
@@ -39,6 +25,28 @@ foreach ( $badgeos_ajax_actions as $action ) {
 	add_action( 'wp_ajax_nopriv_' . $action, 'badgeos_ajax_' . str_replace( '-', '_', $action ), 1 );
 }
 
+/**
+ * AJAX Helper for customizing rendering of achievement based on layout.
+ * Curently, can display List view (do nothing) or Grid view
+ *
+ * @return achievement
+ */
+function custom_render_achievement ( $achievement ){
+
+    global $layout;
+
+    if ( isset($layout) )
+        switch ( $layout ) {
+        case 'grid':
+            // alter CSS for Grid view
+            $achievement = str_replace("badgeos-achievements-list-item", "badgeos-achievements-grid-item badgeos-achievements-grid-5", $achievement);
+            $achievement = preg_replace('/height="[0-9]*"/', '', $achievement);
+            $achievement = preg_replace('/width="[0-9]*"/', '', $achievement);
+            $achievement = preg_replace('/<div class="badgeos-item-excerpt">(\s|.)*<!-- .badgeos-item-excerpt -->/', '', $achievement);
+    }
+
+    return $achievement;
+}
 
 /**
  * AJAX Helper for returning achievements
