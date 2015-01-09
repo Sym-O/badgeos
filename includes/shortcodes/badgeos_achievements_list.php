@@ -102,8 +102,8 @@ function badgeos_register_achievements_list_shortcode() {
 				'description' => __( 'Achievements layout', 'badgeos' ),
                 'type'        => 'select',
                 'values'      => array(
-                    'grid' => __('grid', 'badgeos'),
-                    'list' => __('list', 'badgeos'),
+                    'grid' => __('Grid', 'badgeos'),
+                    'list' => __('List', 'badgeos'),
                     ),
                 'default'     => 'list',
 				),
