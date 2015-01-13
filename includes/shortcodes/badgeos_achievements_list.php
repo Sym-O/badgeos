@@ -11,6 +11,10 @@ function badgeos_register_achievements_list_shortcode() {
 	$achievement_types = array_diff( badgeos_get_achievement_types_slugs(), array( 'step' ) );
 	array_unshift( $achievement_types, 'all' );
 
+    // Setup a custom array of achievement tag
+    $achievement_tags = get_terms('post_tag', 'fields=names&orderby=name');
+	array_unshift( $achievement_tags, 'all' );
+
 	badgeos_register_shortcode( array(
 		'name'            => __( 'Achievement List', 'badgeos' ),
 		'description'     => __( 'Output a list of achievements.', 'badgeos' ),
@@ -107,6 +111,13 @@ function badgeos_register_achievements_list_shortcode() {
                     ),
                 'default'     => 'list',
  				),
+            'tag' => array(
+				'name'        => __( 'Achievement Tag(s)', 'badgeos' ),
+				'description' => __( 'Single, or comma-separated list of, achievement tag(s) to display.', 'badgeos' ),
+				'type'        => 'text',
+				'values'      => $achievement_tags,
+                'default'     => 'all',
+                ),
 		),
 	) );
 }
@@ -142,6 +153,7 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 		'meta_key'    => '',
 		'meta_value'  => '',
         'layout'      => 'list',
+		'tag'         => 'all'
 	), $atts, 'badgeos_achievements_list' ) );
 
 	wp_enqueue_style( 'badgeos-front' );
@@ -163,6 +175,7 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 		'meta_key'    => $meta_key,
 		'meta_value'  => $meta_value,
         'layout'      => $layout,
+		'tag'         => $tag
 	);
 	wp_localize_script( 'badgeos-achievements', 'badgeos', $data );
 
