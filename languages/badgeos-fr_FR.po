@@ -2081,6 +2081,16 @@ msgstr ""
 "à afficher."
 
 # @ badgeos
+#: includes/shortcodes/badgeos_achievements_list.php:105
+msgid "Achievement Tag(s)"
+msgstr "Tag(s) recherché(s)"
+
+# @ badgeos
+#: includes/shortcodes/badgeos_achievements_list.php:106
+msgid "Single, or comma-separated list of, achievement tag(s) to display."
+msgstr "Tag unique ou liste de tags séparés par une virgule"
+
+# @ badgeos
 #: includes/shortcodes/badgeos_achievements_list.php:28
 #: includes/shortcodes/badgeos_nominations.php:16
 #: includes/shortcodes/badgeos_submissions.php:16

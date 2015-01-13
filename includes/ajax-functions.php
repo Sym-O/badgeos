@@ -15,6 +15,7 @@ $badgeos_ajax_actions = array(
 	'get-feedback',
 	'get-achievements-select2',
 	'get-achievement-types',
+	'get-achievement-tags',
 	'get-users',
 	'update-feedback',
 );
@@ -50,7 +51,11 @@ function badgeos_ajax_get_achievements() {
 	$exclude    = isset( $_REQUEST['exclude'] )    ? $_REQUEST['exclude']    : array();
 	$meta_key   = isset( $_REQUEST['meta_key'] )   ? $_REQUEST['meta_key']   : '';
 	$meta_value = isset( $_REQUEST['meta_value'] ) ? $_REQUEST['meta_value'] : '';
+<<<<<<< HEAD
     $layout     = isset( $_REQUEST['layout'] )     ? $_REQUEST['layout']     : 'list';
+=======
+	$tag        = isset( $_REQUEST['tag'] )        ? $_REQUEST['tag']        : false;
+>>>>>>> Tag feature for achievement (+fr_FR translation)
 
 	// Convert $type to properly support multiple achievement types
 	if ( 'all' == $type ) {
@@ -142,10 +147,17 @@ function badgeos_ajax_get_achievements() {
 			$args[ 's' ] = $search;
 		}
 
+        // Layout filter
         if ( 'grid' == $layout ) {
             add_action( 'badgeos_render_achievement', 'badgeos_grid_render_achievement', 10, 2 );
         }
  
+        // Tag Filter
+        if ( 'all'!== $tag ) {
+		    $tag = explode( ',', $tag );
+            $args[ 'tag__in' ] = $tag;
+        }
+
 		// Loop Achievements
 		$achievement_posts = new WP_Query( $args );
 		$query_count += $achievement_posts->found_posts;
@@ -327,4 +339,25 @@ function badgeos_ajax_get_achievement_types() {
 
 	// Return our results
 	wp_send_json_success( $found );
+}
+
+/**
+ * AJAX Helper for selecting achievement tags in Shortcode Embedder
+ *
+ * @since 1.4.0
+ */
+function badgeos_ajax_get_achievement_tags() {
+
+	$achievement_tags = get_terms('post_tag');
+    
+    $found = array();
+    foreach($achievement_tags as $achievement_tag){
+	    array_unshift( $found, (object) array( 'id' => $achievement_tag->term_id, 'name' => $achievement_tag->name ) );
+    }
+	// Include an "all" option as the first option
+	array_unshift( $found, (object) array( 'id' => 'all', 'name' => 'All' ) );
+
+	// Return our results
+	wp_send_json_success( $found );
+
 }

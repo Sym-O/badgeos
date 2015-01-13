@@ -112,6 +112,7 @@ jQuery( function( $ ) {
 						'meta_key' : badgeos.meta_key,
 						'meta_value' : badgeos.meta_value,
                         'layout' : badgeos.layout,
+						'tag' : badgeos.tag
 					},
 					dataType : 'json',
 					success : function( response ) {
