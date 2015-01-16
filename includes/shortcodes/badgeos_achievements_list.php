@@ -97,16 +97,6 @@ function badgeos_register_achievements_list_shortcode() {
 					),
 				'default'     => 'false',
 				),
-			'layout' => array(
-				'name'        => __( 'Layout', 'badgeos' ),
-				'description' => __( 'Achievements layout', 'badgeos' ),
-                'type'        => 'select',
-                'values'      => array(
-                    'grid' => __('grid', 'badgeos'),
-                    'list' => __('list', 'badgeos'),
-                    ),
-                'default'     => 'list',
-				),
 		),
 	) );
 }
@@ -140,8 +130,7 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 		'include'     => array(),
 		'exclude'     => array(),
 		'meta_key'    => '',
-        'meta_value'  => '',
-        'layout'      => '',
+		'meta_value'  => ''
 	), $atts, 'badgeos_achievements_list' ) );
 
 	wp_enqueue_style( 'badgeos-front' );
@@ -161,8 +150,7 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 		'include'     => $include,
 		'exclude'     => $exclude,
 		'meta_key'    => $meta_key,
-        'meta_value'  => $meta_value,
-        'layout'      => $layout
+		'meta_value'  => $meta_value
 	);
 	wp_localize_script( 'badgeos-achievements', 'badgeos', $data );
 
@@ -224,14 +212,9 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 	$badges .= '</div><!-- #badgeos-achievements-filters-wrap -->';
 
 	// Content Container
-    if ( 'grid' == $layout ) {
-        $badges .= '<div id="badgeos-achievements-container" class="badgeos-achievements-grid-columns-4"></div>';
-    }else{
-        $badges .= '<div id="badgeos-achievements-container"></div>';
-    }
+	$badges .= '<div id="badgeos-achievements-container"></div>';
 
 	// Hidden fields and Load More button
-	$badges .= '<input type="hidden" id="badgeos_layout" value="'.$layout.'">';
 	$badges .= '<input type="hidden" id="badgeos_achievements_offset" value="0">';
 	$badges .= '<input type="hidden" id="badgeos_achievements_count" value="0">';
 	$badges .= '<input type="button" id="achievements_list_load_more" value="' . esc_attr__( 'Load More', 'badgeos' ) . '" style="display:none;">';

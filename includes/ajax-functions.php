@@ -47,7 +47,7 @@ foreach ( $badgeos_ajax_actions as $action ) {
  * @return void
  */
 function badgeos_ajax_get_achievements() {
-	global $user_ID, $blog_id, $layout;
+	global $user_ID, $blog_id;
 
 	// Setup our AJAX query vars
 	$type       = isset( $_REQUEST['type'] )       ? $_REQUEST['type']       : false;
