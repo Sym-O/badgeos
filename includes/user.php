@@ -277,6 +277,11 @@ function badgeos_profile_award_achievement( $user = null, $achievement_ids = arr
 
 						<?php while ( $the_query->have_posts() ) : $the_query->the_post();
 
+                            // retrieve post_id and aimed_badges
+                            $achievement_id = get_the_ID();
+                            $aimed_badges = get_user_meta( $user->ID, 'aimed_badges', true );
+                            $aimed_array = array_map('intval', explode(" ", $aimed_badges));
+
 							// Setup our award URL
 							$award_url = add_query_arg( array(
 								'action'         => 'award',
@@ -288,9 +293,6 @@ function badgeos_profile_award_achievement( $user = null, $achievement_ids = arr
 								<td><?php the_post_thumbnail( array( 50, 50 ) ); ?></td>
 								<td>
 									<?php echo edit_post_link( get_the_title() ); ?>
-								</td>
-								<td>
-									<a href="<?php echo esc_url( wp_nonce_url( $award_url, 'badgeos_award_achievement' ) ); ?>"><?php printf( __( 'Award %s', 'badgeos' ), ucwords( $achievement_type['single_name'] ) ); ?></a>
 									<?php if ( in_array( get_the_ID(), (array) $achievement_ids ) ) :
 										// Setup our revoke URL
 										$revoke_url = add_query_arg( array(
@@ -303,6 +305,24 @@ function badgeos_profile_award_achievement( $user = null, $achievement_ids = arr
 									<?php endif; ?>
 
 								</td>
+                                <td><a href="<?php echo esc_url( wp_nonce_url( $award_url, 'badgeos_award_achievement' ) ); ?>"><?php printf( __( 'Award %s', 'badgeos' ), ucwords( $achievement_type['single_name'] ) ); ?></a>
+                                <br />
+                                <?php 
+
+                                $aimed_url = add_query_arg( array(
+                                    'action'         => 'aimed',
+                                    'user_id'        => absint( $user->ID ),
+                                    'achievement_id' => absint( get_the_ID() ),
+                                ) );
+                                
+                                if ( check_achievement( $achievement_id ) ) {
+                                    if ( in_array( $achievement_id, $aimed_array ) )
+                                            echo "<a href=".esc_url( wp_nonce_url( $aimed_url, 'badgeos_aimed_achievement' ) )." />Remove from bucket</a>" ; 
+                                    else
+                                            echo "<a href=".esc_url( wp_nonce_url( $aimed_url, 'badgeos_aimed_achievement' ) )." />Add to bucket</a>" ; 
+                                }
+                                ?>
+                                </td>
 							</tr>
 						<?php endwhile; ?>
 
@@ -345,6 +365,18 @@ function badgeos_process_user_data() {
 	//verify uesr meets minimum role to view earned badges
 	if ( current_user_can( badgeos_get_manager_capability() ) ) {
 
+		if ( isset( $_GET['action'] ) && 'aimed' == $_GET['action'] &&  isset( $_GET['user_id'] ) && isset( $_GET['achievement_id'] ) ) {
+
+			// Verify our nonce
+			check_admin_referer( 'badgeos_aimed_achievement' );
+            
+            // update aimed achievements
+            $aimed = update_aimed_achievements( $_GET['user_id'], $_GET['achievement_id'] ); 
+            update_usermeta( $_GET['user_id'], 'aimed_badges', $aimed );
+
+			wp_redirect( add_query_arg( 'user_id', absint( $_GET['user_id'] ), admin_url( 'user-edit.php' ) ) );
+            exit();
+        }
 		// Process awarding achievement to user
 		if ( isset( $_GET['action'] ) && 'award' == $_GET['action'] &&  isset( $_GET['user_id'] ) && isset( $_GET['achievement_id'] ) ) {
 

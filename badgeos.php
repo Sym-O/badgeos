@@ -59,6 +59,12 @@ class BadgeOS {
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
 		add_action( 'init', array( $this, 'credly_init' ) );
 
+        // hook used to implement aimed achievements 
+        add_action( 'edit_user_profile', 'save_aimed_badges' );
+        add_action( 'show_user_profile', 'show_aimed_badges' );
+        add_action( 'edit_user_profile_update', 'save_aimed_badges' );
+        add_action( 'personal_options_update', 'save_aimed_badges' );
+        add_action( 'badgeos_award_achievement', 'update_aimed_achievement_on_award', 10, 2); 
 	}
 
 	/**
@@ -88,6 +94,7 @@ class BadgeOS {
 		require_once( $this->directory_path . 'includes/credly.php' );
 		require_once( $this->directory_path . 'includes/credly-badge-builder.php' );
 		require_once( $this->directory_path . 'includes/widgets.php' );
+		require_once( $this->directory_path . 'includes/aim_badges.php' );
 	}
 
 	/**
@@ -100,6 +107,7 @@ class BadgeOS {
 		wp_register_script( 'badgeos-admin-js', $this->directory_url . 'js/admin.js', array( 'jquery' ) );
 		wp_register_script( 'badgeos-credly', $this->directory_url . 'js/credly.js' );
 		wp_register_script( 'badgeos-achievements', $this->directory_url . 'js/badgeos-achievements.js', array( 'jquery' ), '1.1.0', true );
+		//wp_register_script( 'badgeos-aimed-achievements', $this->directory_url . 'js/badgeos-aimed-achievements.js', array( 'jquery' ), null, false );
 		wp_register_script( 'credly-badge-builder', $this->directory_url . 'js/credly-badge-builder.js', array( 'jquery' ), '1.3.0', true );
 
 		// Register styles

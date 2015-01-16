@@ -379,7 +379,7 @@ function badgeos_has_user_earned_achievement( $achievement_id = 0, $user_id = 0 
  * @param  integer $achievement The achievement's post ID
  * @return string               Concatenated markup
  */
-function badgeos_render_achievement( $achievement = 0 ) {
+function badgeos_render_achievement( $achievement = 0, $aimed_array ) {
 	global $user_ID;
 
 	// If we were given an ID, get the post
@@ -387,7 +387,7 @@ function badgeos_render_achievement( $achievement = 0 ) {
 		$achievement = get_post( $achievement );
 
 	// make sure our JS and CSS is enqueued
-	wp_enqueue_script( 'badgeos-achievements' );
+    wp_enqueue_script( 'badgeos-achievements' );
 	wp_enqueue_style( 'badgeos-widget' );
 
 	// check if user has earned this Achievement, and add an 'earned' class
@@ -417,7 +417,13 @@ function badgeos_render_achievement( $achievement = 0 ) {
 
 			// Achievement Title
 			$output .= '<h2 class="badgeos-item-title"><a href="' . get_permalink( $achievement->ID ) . '">' . get_the_title( $achievement->ID ) .'</a></h2>';
-
+            
+            if ( 'user-has-earned' != $earned_status ) {        
+                if ( in_array( $achievement->ID, $aimed_array ) )
+                    $output .= '<div><button class="bucket" value="'.$achievement->ID.'">-</button></div>';
+                else
+                    $output .= '<div><button class="bucket" value="'.$achievement->ID.'">+</button></div>';
+            }
 			// Achievement Short Description
 			$output .= '<div class="badgeos-item-excerpt">';
 			$output .= badgeos_achievement_points_markup( $achievement->ID );

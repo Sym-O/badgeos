@@ -9,6 +9,26 @@ jQuery( function( $ ) {
 		badgeos_get_feedback();
 	} );
 
+    function handle_bucket(e) {
+
+        $.ajax( {
+            url: badgeos.ajax_url,
+            data: {
+                'achievement_id': this.getAttribute( 'value' ),
+                'action'  : 'aimed_achievements',
+                'user_id' : badgeos.user_id,
+            },
+            dataType : 'json',
+            success : function( response ) {
+                if ( e.target.innerHTML == '+' )
+                    e.target.innerHTML = '-';
+                else
+                    e.target.innerHTML = '+';
+                // notify user
+            }
+        });
+    }
+
 	function badgeos_hide_submission_comments( submissions_wrapper ) {
 		submissions_wrapper.find( '.badgeos-submission-comments-wrap' ).hide();
 		submissions_wrapper.find( '.badgeos-comment-form' ).hide();
@@ -111,7 +131,8 @@ jQuery( function( $ ) {
 						'exclude' : badgeos.exclude,
 						'meta_key' : badgeos.meta_key,
 						'meta_value' : badgeos.meta_value,
-                        'layout' : $( '#badgeos_layout' ).val()
+                        'layout' : $( '#badgeos_layout' ).val(),
+                        'aimed' : badgeos.aimed,
 					},
 					dataType : 'json',
 					success : function( response ) {
@@ -121,6 +142,7 @@ jQuery( function( $ ) {
 						}
 						else {
 							$( '#badgeos-achievements-container' ).append( response.data.message );
+                            $( '.bucket' ).click(handle_bucket);
 							$( '#badgeos_achievements_offset' ).val( response.data.offset );
 							$( '#badgeos_achievements_count' ).val( response.data.badge_count );
 							credlyize();
@@ -140,6 +162,7 @@ jQuery( function( $ ) {
 	// Reset all our base query vars and run an AJAX call
 	function badgeos_ajax_achievement_list_reset() {
 
+        $( '.bucket' ).unbind();
 		$( '#badgeos_achievements_offset' ).val( 0 );
 		$( '#badgeos_achievements_count' ).val( 0 );
 
@@ -170,7 +193,7 @@ jQuery( function( $ ) {
 	$( '#achievements_list_load_more' ).click( function() {
 
 		$( '.badgeos-spinner' ).show();
-
+        $( '.bucket' ).unbind();
 		badgeos_ajax_achievement_list();
 
 	} );

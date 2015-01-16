@@ -9,20 +9,6 @@
  * @link https://credly.com
  */
 
-function custom_render_achievement ( $achievement ){
-
-    global $layout;
-
-    if ( isset($layout) )
-        if ( $layout == 'grid' ){
-            $achievement = str_replace("badgeos-achievements-list-item", "badgeos-achievements-grid-item", $achievement);
-            $achievement = str_replace('height="100"', '', $achievement);
-            $achievement = str_replace('width="100"', '', $achievement);
-            //$achievement = str_replace("100x100", "150x150", $achievement);
-    }
-
-    return $achievement;
-}
 // Setup our badgeos AJAX actions
 $badgeos_ajax_actions = array(
 	'get-achievements',
@@ -31,6 +17,7 @@ $badgeos_ajax_actions = array(
 	'get-achievement-types',
 	'get-users',
 	'update-feedback',
+    'aimed_achievements',
 );
 
 // Register core Ajax calls.
@@ -41,6 +28,59 @@ foreach ( $badgeos_ajax_actions as $action ) {
 
 
 /**
+ * AJAX Helper for updating user's aimed_achievements
+ *
+ * @return void
+ */
+function badgeos_ajax_aimed_achievements() {
+    // delete aimed badges when earned
+    global $user_ID;
+
+    // retrieve sent badge and badges
+    $achievement_id = isset( $_REQUEST['achievement_id'] ) ? $_REQUEST['achievement_id']  : -1;
+    $user_id = isset( $_REQUEST['user_id'] ) ? $_REQUEST['user_id']  : -1;
+
+    if ( $user_id != -1 )
+        $user_id = $user_ID;
+    
+    $aimed = update_aimed_achievements( $user_id, $achievement_id ) ; 
+    if ( $achievement_id == -1 and ! current_user_can( 'edit_user', $user_id ))
+        wp_send_json_error('something unexpected happened');
+    else {
+        update_usermeta( $user_id, 'aimed_badges', $aimed );
+
+        // check if the update succeed, in case of failure -> die
+        if ( get_user_meta($user_id,  'aimed_badges', true ) != $aimed)
+            wp_send_json_error('something unexpected happened');
+        else
+            wp_send_json_success($aimed);
+    }
+}
+
+/**
+ * AJAX Helper for customizing rendering of achievement based on layout.
+ * Curently, can display List view (do nothing) or Grid view
+ *
+ * @return achievement
+ */
+function custom_render_achievement ( $achievement ){
+
+    global $layout;
+
+    if ( isset($layout) )
+        switch ( $layout ) {
+        case 'grid':
+            // alter CSS for Grid view
+            $achievement = str_replace("badgeos-achievements-list-item", "badgeos-achievements-grid-item badgeos-achievements-grid-5", $achievement);
+            $achievement = preg_replace('/height="[0-9]*"/', '', $achievement);
+            $achievement = preg_replace('/width="[0-9]*"/', '', $achievement);
+            $achievement = preg_replace('/<div class="badgeos-item-excerpt">(\s|.)*<!-- .badgeos-item-excerpt -->/', '', $achievement);
+    }
+
+    return $achievement;
+}
+
+/**
  * AJAX Helper for returning achievements
  *
  * @since 1.0.0
@@ -48,6 +88,10 @@ foreach ( $badgeos_ajax_actions as $action ) {
  */
 function badgeos_ajax_get_achievements() {
 	global $user_ID, $blog_id;
+
+    //$aimed_badges = get_aimed_badges();
+    $aimed_badges = get_user_meta( $user_ID, 'aimed_badges', true );
+    $aimed_array = array_map('intval', explode(" ", $aimed_badges));
 
 	// Setup our AJAX query vars
 	$type       = isset( $_REQUEST['type'] )       ? $_REQUEST['type']       : false;
@@ -65,6 +109,7 @@ function badgeos_ajax_get_achievements() {
 	$meta_key   = isset( $_REQUEST['meta_key'] )   ? $_REQUEST['meta_key']   : '';
 	$meta_value = isset( $_REQUEST['meta_value'] ) ? $_REQUEST['meta_value'] : '';
     $layout     = isset( $_REQUEST['layout'] )     ? $_REQUEST['layout']     : 'list';
+    $aimed      = isset( $_REQUEST['aimed'] )      ? $_REQUEST['aimed']      : false;
 
 	// Convert $type to properly support multiple achievement types
 	if ( 'all' == $type ) {
@@ -159,14 +204,17 @@ function badgeos_ajax_get_achievements() {
 		$achievement_posts = new WP_Query( $args );
 		$query_count += $achievement_posts->found_posts;
 		while ( $achievement_posts->have_posts() ) : $achievement_posts->the_post();
-			$achievements .= badgeos_render_achievement( get_the_ID() );
-			$achievement_count++;
+            if ( $aimed === "true" ) {
+                if ( in_array( get_the_ID(), $aimed_array ) ) {
+                    $achievements .= badgeos_render_achievement( get_the_ID(), $aimed_array);
+                    $achievement_count++;
+                }
+            }
+            else {
+                $achievements .= badgeos_render_achievement( get_the_ID(), $aimed_array );
+                $achievement_count++;
+            }
 		endwhile;
-
-		// Sanity helper: if we're filtering for complete and we have no
-		// earned achievements, $achievement_posts should definitely be false
-		/*if ( 'completed' == $filter && empty( $earned_ids ) )
-			$achievements = '';*/
 
 		// Display a message for no results
 		if ( empty( $achievements ) ) {
@@ -191,6 +239,7 @@ function badgeos_ajax_get_achievements() {
 		'query_count' => $query_count,
 		'badge_count' => $achievement_count,
 		'type'        => $type,
+        'test' => $filter,
 	) );
 }
 
