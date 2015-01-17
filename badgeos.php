@@ -59,6 +59,12 @@ class BadgeOS {
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
 		add_action( 'init', array( $this, 'credly_init' ) );
 
+        // hook used to implement aimed achievements
+        add_action( 'edit_user_profile', 'save_aimed_badges' );
+        add_action( 'show_user_profile', 'show_aimed_badges' );
+        add_action( 'edit_user_profile_update', 'save_aimed_badges' );
+        add_action( 'personal_options_update', 'save_aimed_badges' );
+        add_action( 'badgeos_award_achievement', 'update_aimed_achievement_on_award', 10, 2);
 	}
 
 	/**
@@ -88,6 +94,7 @@ class BadgeOS {
 		require_once( $this->directory_path . 'includes/credly.php' );
 		require_once( $this->directory_path . 'includes/credly-badge-builder.php' );
 		require_once( $this->directory_path . 'includes/widgets.php' );
+		require_once( $this->directory_path . 'includes/aim_badges.php' );
 	}
 
 	/**
