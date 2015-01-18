@@ -97,6 +97,16 @@ function badgeos_register_achievements_list_shortcode() {
 					),
 				'default'     => 'false',
 				),
+			'layout' => array(
+				'name'        => __( 'Layout', 'badgeos' ),
+				'description' => __( 'Achievements layout', 'badgeos' ),
+                'type'        => 'select',
+                'values'      => array(
+                    'grid' => __('Grid', 'badgeos'),
+                    'list' => __('List', 'badgeos'),
+                    ),
+                'default'     => 'list',
+ 				),
 		),
 	) );
 }
@@ -130,7 +140,8 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 		'include'     => array(),
 		'exclude'     => array(),
 		'meta_key'    => '',
-		'meta_value'  => ''
+		'meta_value'  => '',
+        'layout'      => 'list',
 	), $atts, 'badgeos_achievements_list' ) );
 
 	wp_enqueue_style( 'badgeos-front' );
@@ -150,7 +161,8 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 		'include'     => $include,
 		'exclude'     => $exclude,
 		'meta_key'    => $meta_key,
-		'meta_value'  => $meta_value
+		'meta_value'  => $meta_value,
+        'layout'      => $layout,
 	);
 	wp_localize_script( 'badgeos-achievements', 'badgeos', $data );
 

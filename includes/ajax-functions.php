@@ -50,6 +50,7 @@ function badgeos_ajax_get_achievements() {
 	$exclude    = isset( $_REQUEST['exclude'] )    ? $_REQUEST['exclude']    : array();
 	$meta_key   = isset( $_REQUEST['meta_key'] )   ? $_REQUEST['meta_key']   : '';
 	$meta_value = isset( $_REQUEST['meta_value'] ) ? $_REQUEST['meta_value'] : '';
+    $layout     = isset( $_REQUEST['layout'] )     ? $_REQUEST['layout']     : 'list';
 
 	// Convert $type to properly support multiple achievement types
 	if ( 'all' == $type ) {
@@ -141,6 +142,10 @@ function badgeos_ajax_get_achievements() {
 			$args[ 's' ] = $search;
 		}
 
+        if ( 'grid' == $layout ) {
+            add_action( 'badgeos_render_achievement', 'badgeos_grid_render_achievement', 10, 2 );
+        }
+ 
 		// Loop Achievements
 		$achievement_posts = new WP_Query( $args );
 		$query_count += $achievement_posts->found_posts;
