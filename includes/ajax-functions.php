@@ -51,11 +51,8 @@ function badgeos_ajax_get_achievements() {
 	$exclude    = isset( $_REQUEST['exclude'] )    ? $_REQUEST['exclude']    : array();
 	$meta_key   = isset( $_REQUEST['meta_key'] )   ? $_REQUEST['meta_key']   : '';
 	$meta_value = isset( $_REQUEST['meta_value'] ) ? $_REQUEST['meta_value'] : '';
-<<<<<<< HEAD
     $layout     = isset( $_REQUEST['layout'] )     ? $_REQUEST['layout']     : 'list';
-=======
 	$tag        = isset( $_REQUEST['tag'] )        ? $_REQUEST['tag']        : false;
->>>>>>> Tag feature for achievement (+fr_FR translation)
 
 	// Convert $type to properly support multiple achievement types
 	if ( 'all' == $type ) {
