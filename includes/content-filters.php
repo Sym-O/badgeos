@@ -143,6 +143,8 @@ function badgeos_reformat_entries( $content ) {
 	$newcontent .= badgeos_achievement_points_markup();
 	$newcontent .= wpautop( $content );
 
+	$newcontent .= badgeos_render_criteria_text( $badge_id, get_current_user_id() );
+
 	// Include output for our steps
 	$newcontent .= badgeos_get_required_achievements_for_achievement_list( $badge_id );
 
@@ -355,6 +357,26 @@ function badgeos_render_earned_achievement_text( $achievement_id = 0, $user_id =
 	}
 
 	return apply_filters( 'badgeos_earned_achievement_message', $earned_message, $achievement_id, $user_id );
+}
+
+/**
+ * Returns a message if user has earned the achievement.
+ *
+ * @since  1.1.0
+ *
+ * @param  integer $achievement_id Achievement ID.
+ * @param  integer $user_id        User ID.
+ * @return string                  HTML Markup.
+ */
+function badgeos_render_criteria_text( $achievement_id = 0, $user_id = 0 ) {
+
+	$earned_message = '';
+
+	if ( $criteria_text = get_post_meta( $achievement_id, '_badgeos_criteria_text', true ) ) {
+		$earned_message .= '<div class="badgeos-criteria">' . $criteria_text . '</div>';
+	}
+
+	return apply_filters( 'badgeos_criteria_text', $earned_message, $achievement_id, $user_id );
 }
 
 /**
