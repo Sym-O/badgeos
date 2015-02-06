@@ -28,7 +28,7 @@ class BadgeOS_Credly {
 	public $field_title = 'post_title';
 	public $field_short_description = 'post_excerpt';
 	public $field_description = 'post_body';
-	public $field_criteria = '';
+	public $field_criteria = 'criteria_text';
 	public $field_image = 'featured_image';
 	public $field_testimonial = 'congratulations_text';
 	public $field_evidence = 'permalink';
@@ -51,7 +51,7 @@ class BadgeOS_Credly {
 			'credly_badge_title' => 'post_title',
 			'credly_badge_short_description' => 'post_excerpt',
 			'credly_badge_description' => 'post_body',
-			'credly_badge_criteria' => '',
+			'credly_badge_criteria' => 'criteria_text',
 			'credly_badge_image' => 'featured_image',
 			'credly_badge_testimonial' => 'congratulations_text',
 			'credly_badge_evidence' => 'permalink',
@@ -1141,6 +1141,11 @@ function credly_fieldmap_get_field_value( $post_id, $field = '' ) {
 
 		case 'congratulations_text':
             $value = get_post_meta( $post_id, '_badgeos_congratulations_text', true );
+
+            break;
+
+		case 'criteria_text':
+            $value = get_post_meta( $post_id, '_badgeos_criteria_text', true );
 
             break;
 

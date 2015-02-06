@@ -118,6 +118,13 @@ function badgeos_custom_metaboxes( array $meta_boxes ) {
 				'type' => 'checkbox',
 			),
 			array(
+				'name' => __( 'Criteria Text', 'badgeos' ),
+				'desc' => __( 'Display at the end of the content. If sending to Credly, a great place for a criteria description.', 'badgeos' ),
+				'id'   => $prefix . 'criteria_text',
+				'type' => 'wysiwyg',
+                'escape_cb' => 'wp_kses_post',
+			),
+			array(
 				'name' => __( 'Congratulations Text', 'badgeos' ),
 				'desc' => __( 'Displayed after achievement is earned. If sending to Credly, a great place for a testimonial for those who complete this achievement.', 'badgeos' ),
 				'id'   => $prefix . 'congratulations_text',
