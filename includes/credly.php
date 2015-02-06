@@ -1033,6 +1033,8 @@ function credly_fieldmap_get_fields() {
     $fields[] = 'post_excerpt';
     $fields[] = 'featured_image';
     $fields[] = 'permalink';
+    $fields[] = 'credly_evidence_link';
+    $fields[] = 'criteria_text';
 	$fields[] = 'congratulations_text';
 
 	$achievement_types = badgeos_get_achievement_types_slugs();
@@ -1146,6 +1148,11 @@ function credly_fieldmap_get_field_value( $post_id, $field = '' ) {
 
 		case 'criteria_text':
             $value = get_post_meta( $post_id, '_badgeos_criteria_text', true );
+
+            break;
+
+		case 'credly_evidence_link':
+            $value = 'https://credly.com/recipients/'.get_post_meta( $post_id, '_badgeos_credly_badge_id', true );
 
             break;
 
