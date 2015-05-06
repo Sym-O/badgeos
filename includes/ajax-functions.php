@@ -148,6 +148,11 @@ function badgeos_ajax_get_achievements() {
         if ( 'all'!== $tag ) {
 		    $tag = explode( ',', $tag );
             $args[ 'tag__in' ] = $tag;
+            // check if filter is set to a specific tag
+            if ( strstr($filter,'tag-') ){
+                $filter_tag = str_replace('tag-','',$filter);
+                $args[ 'tag__in' ] = $filter_tag;
+            }
         }
 
 		// Loop Achievements

@@ -211,7 +211,15 @@ function badgeos_achievements_list_shortcode( $atts = array () ){
 					if ( $user_ID >0 ) {
 						$badges .= '<option value="completed">' . sprintf( __( 'Completed %s', 'badgeos' ), $post_type_plural );
 						$badges .= '<option value="not-completed">' . sprintf( __( 'Not Completed %s', 'badgeos' ), $post_type_plural );
-					}
+                    }
+                    // If tag field used
+                    if ( 'all'!== $tag ) {
+                        $tag = str_replace('all,','',$tag);
+		                $tags = explode( ',', $tag );
+                        foreach($tags as $tags_element){
+						    $badges .= '<option value="tag-'.$tags_element.'">'. get_tag($tags_element)->name;
+                        }
+                    }
 					// TODO: if show_points is true "Badges by Points"
 					// TODO: if dev adds a custom taxonomy to this post type then load all of the terms to filter by
 
