@@ -129,6 +129,7 @@ function badgeos_custom_metaboxes( array $meta_boxes ) {
 				'desc' => __( 'Displayed after achievement is earned. If sending to Credly, a great place for a testimonial for those who complete this achievement.', 'badgeos' ),
 				'id'   => $prefix . 'congratulations_text',
 				'type' => 'textarea',
+                'escape_cb' => 'wp_kses_post',
 			),
 			array(
 				'name' => __( 'Maximum Earnings', 'badgeos' ),
