@@ -373,7 +373,11 @@ function displayDescription(e){
     jQuery(".badgeos-item-short-description").hide();
     var elt = jQuery("#"+ idKey + e);
     var badgeElt = jQuery("#" + "badgeos-achievements-grid-item-" + e);
-    elt.css('left'  , badgeElt.position().left  + 130);
+    if(badgeElt.position().left < jQuery(window).width()/2){
+        elt.css('left'  , badgeElt.position().left  + 130);
+    } else {
+        elt.css('left'  , badgeElt.position().left - elt.width());
+    }
     elt.css('top'   , badgeElt.position().top   + 130);
     elt.fadeIn("fast");
 }

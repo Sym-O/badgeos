@@ -83,7 +83,9 @@
     top: 0; left: 0;
     float: left; 
     text-align: center;
-	width: 30%; height: auto;
+	width: auto; height: auto;
+    min-width: 200px;
+    max-width: 400px;
 	padding: 5px;
 	margin: none;
     color: white;
