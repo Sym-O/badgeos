@@ -76,6 +76,20 @@
 	font-size: 15px;
 	line-height: 18px;
 }
+.badgeos-achievements-grid-item .badgeos-item-short-description{
+    z-index: 10;
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    float: left; 
+    text-align: center;
+	width: 30%; height: auto;
+	padding: 5px;
+	margin: none;
+    color: white;
+	background: black;
+	border: 2px solid #00ff00;
+}
 #badgeos-achievements-container .badgeos-item-title {
 	display: inline-block;
 	margin-top: 0;

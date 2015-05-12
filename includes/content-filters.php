@@ -500,8 +500,10 @@ function badgeos_grid_render_achievement ( $achievement = 0 ){
 
 		// Achievement Image
 		$output .= '<div class="badgeos-item-image">';
-		$output .= '<a href="' . get_permalink( $achievement->ID ) . '">' . badgeos_get_achievement_post_thumbnail( $achievement->ID ) . '</a>';
+		$output .= '<a href="' . get_permalink( $achievement->ID ) . '" onmouseover="displayDescription('.$achievement->ID.')" onmouseout="hideDescription('.$achievement->ID.')" onclick="hideDescription('.$achievement->ID.')">' . badgeos_get_achievement_post_thumbnail( $achievement->ID ) . '</a>';
 		$output .= '</div><!-- .badgeos-item-image -->';
+        $output .= '<div class="badgeos-item-short-description" id="description-'.$achievement->ID.'">'.$achievement->post_excerpt;
+		$output .= '</div>';
 
 		// Achievement Content
 		$output .= '<div class="badgeos-item-description">';

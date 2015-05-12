@@ -194,6 +194,28 @@ jQuery( function( $ ) {
 
 	} );
 
+    // Display short description when hover badge
+    var posY;
+    var posX;
+    jQuery(document).ready(function(m) {
+        $(document).mousemove(function(m){
+            posX = m.pageX - 215;
+            posY = m.pageY;
+        });
+    })
+    function displayDescription(e){
+        $("#"+e).css('left', posX);
+        $("#"+e).css('top', posY);
+        $("#puce"+e).css('z-index', '2');
+        $("#"+e).fadeIn("fast");
+    }
+    function hideDescription(e){
+        $("#"+e).hide();
+        $("#"+e).css('left', 0);
+        $("#"+e).css('top', 0);
+        $("#puce"+e).css('z-index', '0');
+    }
+
 	// Credly popup functionality
 	if ( 'undefined' != typeof BadgeosCredlyData ) {
 		// credly markup
@@ -344,3 +366,21 @@ jQuery( function( $ ) {
 	}
 
 } );
+
+// Addon for gridview to display short description when hover badge
+var idKey = "description-";
+function displayDescription(e){
+    jQuery(".badgeos-item-short-description").hide();
+    var elt = jQuery("#"+ idKey + e);
+    var badgeElt = jQuery("#" + "badgeos-achievements-grid-item-" + e);
+    elt.css('left'  , badgeElt.position().left  + 130);
+    elt.css('top'   , badgeElt.position().top   + 130);
+    elt.fadeIn("fast");
+}
+function hideDescription(e){
+    jQuery(".badgeos-item-short-description").hide();
+    var elt = jQuery("#"+ idKey + e);
+    elt.css('left', 0);
+    elt.css('top', 0);
+}
+//////////////////////////////////////////////
