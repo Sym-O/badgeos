@@ -373,18 +373,21 @@ function displayDescription(e){
     jQuery(".badgeos-item-short-description").hide();
     var elt = jQuery("#"+ idKey + e);
     var badgeElt = jQuery("#" + "badgeos-achievements-grid-item-" + e);
-    if(badgeElt.position().left < jQuery(window).width()/2){
-        elt.css('left'  , badgeElt.position().left  + 130);
+    if (jQuery(window).width() < 750){
+        elt.css('left'  , 0);
     } else {
-        elt.css('left'  , badgeElt.position().left - elt.width());
+        if(badgeElt.position().left < jQuery("#badgeos-achievements-container").width()/2){
+            elt.css('left'  , badgeElt.position().left  + 130);
+        } else {
+            elt.css('left'  , badgeElt.position().left - elt.width());
+        }
     }
     elt.css('top'   , badgeElt.position().top   + 130);
     elt.fadeIn("fast");
 }
 function hideDescription(e){
-    jQuery(".badgeos-item-short-description").hide();
     var elt = jQuery("#"+ idKey + e);
-    elt.css('left', 0);
-    elt.css('top', 0);
+    elt.stop();
+    jQuery(".badgeos-item-short-description").hide();
 }
 //////////////////////////////////////////////
