@@ -1059,6 +1059,12 @@ msgid "%1$d Required %2$s"
 msgstr "%1$d %2$s Requises"
 
 # @ badgeos
+#: includes/content-filters.php:265
+#, php-format
+msgid "%Required %1$s"
+msgstr "%1$s Requises"
+
+# @ badgeos
 #: includes/content-filters.php:318
 #, php-format
 msgid "%d Points"
@@ -2289,7 +2295,7 @@ msgstr "Recherche : %s"
 #: includes/shortcodes/badgeos_nomination.php:10
 #: includes/submission-actions.php:1117
 msgid "Nomination Form"
-msgstr "Forme de la Nomination"
+msgstr "Formulaire de nomination"
 
 # @ badgeos
 #: includes/shortcodes/badgeos_nomination.php:11
@@ -2802,7 +2808,7 @@ msgstr "Raison de la nomination"
 # @ badgeos
 #: includes/submission-actions.php:1163
 msgid "Create a New Submission"
-msgstr "Créer une Nouvelle Soumission"
+msgstr "Soumettre une demande"
 
 # @ badgeos
 #: includes/submission-actions.php:1210

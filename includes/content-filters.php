@@ -143,7 +143,8 @@ function badgeos_reformat_entries( $content ) {
 	$newcontent .= badgeos_achievement_points_markup();
 	$newcontent .= wpautop( $content );
 
-    $newcontent .= badgeos_render_criteria_text( $badge_id, get_current_user_id() ); 
+    // No more display criteria on badgoes. Criteria field only for credly
+    // $newcontent .= badgeos_render_criteria_text( $badge_id, get_current_user_id() ); 
  
 	// Include output for our steps
 	$newcontent .= badgeos_get_required_achievements_for_achievement_list( $badge_id );
@@ -264,7 +265,7 @@ function badgeos_get_required_achievements_for_achievement_list_markup( $steps =
 	}
 	$post_type_object = get_post_type_object( $step->post_type );
 
-	$output .= '<h4>' . apply_filters( 'badgeos_steps_heading', sprintf( __( '%1$d Required %2$s', 'badgeos' ), $count, $post_type_object->labels->name ), $steps ) . '</h4>';
+	$output .= '<h4>' . apply_filters( 'badgeos_steps_heading', sprintf( __( '%Required %1$s', 'badgeos' ), $post_type_object->labels->name ), $steps ) . '</h4>';
 	$output .= '<' . $container .' class="badgeos-required-achievements">';
 	$output .= $step_output;
 	$output .= '</'. $container .'><!-- .badgeos-required-achievements -->';

@@ -36,7 +36,7 @@
     <meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
     <meta name="google-analytics" content="UA-3769691-2">
 
-<meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="B0435B99:377A:1B24135:56977F10" name="octolytics-dimension-request_id" />
+<meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="B0435B99:2C59:1F58474:56977FA8" name="octolytics-dimension-request_id" />
 <meta content="/&lt;user-name&gt;/&lt;repo-name&gt;/blob/show" data-pjax-transient="true" name="analytics-location" />
 <meta content="Rails, view, blob#show" data-pjax-transient="true" name="analytics-event" />
 
@@ -742,7 +742,7 @@
     </div>
 
 
-        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/opencredit/badgeos/delete/master/languages/badgeos-fr_FR.mo" class="inline-form" data-form-nonce="7300eea7d008fe4cf98d211d648456f5e80f9d56" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="wydXur+xDsMXYqRipJ4WyMj6ESuFROalfd13eaPTMBg5d/Gn6UzhUP6PFRZPZGssXP8MoVUbfFQhBXe500Azbw==" /></div>
+        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/opencredit/badgeos/delete/master/languages/badgeos-fr_FR.mo" class="inline-form" data-form-nonce="7300eea7d008fe4cf98d211d648456f5e80f9d56" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="3PP3UdS5dZ4V0d6Ym6ExWmal1C8JLbBlh5osFKntJDDpk7m4lJpLC9N5Bn9z2Rr2SQ4RrOk8M5glhdt/pC3CSQ==" /></div>
           <button class="btn-octicon btn-octicon-danger tooltipped tooltipped-nw" type="submit"
             aria-label="You must be signed in to make or propose changes" data-disable-with>
             <span aria-hidden="true" class="octicon octicon-trashcan"></span>
@@ -797,7 +797,7 @@
       <span aria-hidden="true" class="mega-octicon octicon-mark-github" title="GitHub "></span>
 </a>
     <ul class="site-footer-links">
-      <li>&copy; 2016 <span title="0.05401s from github-fe122-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+      <li>&copy; 2016 <span title="0.04398s from github-fe117-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
         <li><a href="https://github.com/site/terms" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
         <li><a href="https://github.com/site/privacy" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
         <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>
