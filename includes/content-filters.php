@@ -396,6 +396,34 @@ function badgeos_has_user_earned_achievement( $achievement_id = 0, $user_id = 0 
 }
 
 /**
+ * Return html text to display the count of achievements on the achievement image
+ * only if count is > 1
+ *
+ * @param  integer $achievement_id Achievement ID.
+ * @param  integer $user_id        User ID.
+ * @return String HTML Markup
+ */
+function badgeos_render_achievement_counts( $achievement_id = 0, $user_id = 0 ) {
+    $nb_achievements = count(badgeos_get_user_achievements( array( 'user_id' => $user_id, 'achievement_id' => absint( $achievement_id ) ) ));
+    $output = '';
+    if($nb_achievements > 1){
+        $output .= '<div class="badgeos-item-nb-container">';
+        $output .= '<div class="badgeos-item-nb">';
+        $stars ='';
+        if($nb_achievements > 5) {
+            $stars .= $nb_achievements.'&nbsp;&starf;';
+        } else {
+            for($i=1;$i<=$nb_achievements;$i++){
+                $stars .= '&starf;&nbsp;';
+                if($i%5 == 0) $stars .= '</br>';
+            }
+        }
+	    $output .= $stars.'</div></div>';
+    }
+    return $output;
+}
+
+/**
  * Render an achievement
  *
  * @since  1.0.0
@@ -432,6 +460,8 @@ function badgeos_render_achievement( $achievement = 0 ) {
 
 		// Achievement Image
 		$output .= '<div class="badgeos-item-image">';
+        // If multiple earnings, display the count with the achievement image
+        $output .= badgeos_render_achievement_counts($achievement->ID, $user_ID);
 		$output .= '<a href="' . get_permalink( $achievement->ID ) . '">' . badgeos_get_achievement_post_thumbnail( $achievement->ID ) . '</a>';
 		$output .= '</div><!-- .badgeos-item-image -->';
 
@@ -501,6 +531,8 @@ function badgeos_grid_render_achievement ( $achievement = 0 ){
 
 		// Achievement Image
 		$output .= '<div class="badgeos-item-image">';
+        // If multiple earnings, display the count with the achievement image
+        $output .= badgeos_render_achievement_counts($achievement->ID, $user_ID);
 		$output .= '<a href="' . get_permalink( $achievement->ID ) . '" onmouseover="displayDescription('.$achievement->ID.')" onmouseout="hideDescription('.$achievement->ID.')" onclick="hideDescription('.$achievement->ID.')">' . badgeos_get_achievement_post_thumbnail( $achievement->ID ) . '</a>';
 		$output .= '</div><!-- .badgeos-item-image -->';
         $output .= '<div class="badgeos-item-short-description" id="description-'.$achievement->ID.'">'.$achievement->post_excerpt;

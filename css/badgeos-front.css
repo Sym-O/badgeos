@@ -49,6 +49,21 @@
 	width: 100%;
 	height: auto;
 }
+.badgeos-item-image .badgeos-item-nb-container {
+    position:relative;
+}
+.badgeos-item-image .badgeos-item-nb {
+    font-weight:bold;
+    color:#0f0;
+    font-size:15px;
+    z-index:4;
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:0px;
+    background:#fff;
+    opacity:0.9;
+}
 .badgeos-achievements-list-item .badgeos-item-description {
 	width: 80%;
 	float: right;
