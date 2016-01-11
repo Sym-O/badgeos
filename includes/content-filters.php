@@ -136,7 +136,7 @@ function badgeos_reformat_entries( $content ) {
 	// Check if current user has earned this achievement
 	$newcontent .= badgeos_render_earned_achievement_text( $badge_id, get_current_user_id() );
 
-	$newcontent .= '<div class="alignleft badgeos-item-image">'. badgeos_get_achievement_post_thumbnail( $badge_id ) .'</div>';
+    $newcontent .= '<div class="alignleft badgeos-item-image">' . badgeos_render_achievement_counts($badge_id, $user_ID) . badgeos_get_achievement_post_thumbnail( $badge_id ) . '</div>';
 	// $newcontent .= $title;
 
 	// Points for badge
