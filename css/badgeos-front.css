@@ -38,7 +38,7 @@
 	overflow: hidden;
 }
 .badgeos-achievements-list-item .badgeos-item-image {
-	width: 16%;
+	/* width: 16%; D2SI Edit*/
 	padding-right: 4%;
 	display: block;
 	float: left;
