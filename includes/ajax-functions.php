@@ -159,7 +159,7 @@ function badgeos_ajax_get_achievements() {
 		$achievement_posts = new WP_Query( $args );
 		$query_count += $achievement_posts->found_posts;
 		while ( $achievement_posts->have_posts() ) : $achievement_posts->the_post();
-            $achievements .= ($layout == 'list')?badgeos_render_achievement( get_the_ID() ) : badgeos_grid_render_achievement( get_the_ID() );
+            $achievements .= ($layout == 'list')?badgeos_render_achievement( get_the_ID(), $user_id ) : badgeos_grid_render_achievement( get_the_ID(), $user_id );
 			$achievement_count++;
 		endwhile;
 

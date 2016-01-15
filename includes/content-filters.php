@@ -428,10 +428,15 @@ function badgeos_render_achievement_counts( $achievement_id = 0, $user_id = 0 ) 
  *
  * @since  1.0.0
  * @param  integer $achievement The achievement's post ID
+ * @param  integer $user_id The ID of user point of view we'd like
  * @return string               Concatenated markup
  */
-function badgeos_render_achievement( $achievement = 0 ) {
-	global $user_ID;
+function badgeos_render_achievement( $achievement = 0, $user_id = 0 ) {
+    // Grab the current user's ID if none was specifed
+	if ( ! $user_id ) {
+	    global $user_ID;
+        $user_id = $user_ID;
+    }
 
 	// If we were given an ID, get the post
 	if ( is_numeric( $achievement ) )
@@ -442,14 +447,14 @@ function badgeos_render_achievement( $achievement = 0 ) {
 	wp_enqueue_style( 'badgeos-widget' );
 
 	// check if user has earned this Achievement, and add an 'earned' class
-	$earned_status = badgeos_get_user_achievements( array( 'user_id' => $user_ID, 'achievement_id' => absint( $achievement->ID ) ) ) ? 'user-has-earned' : 'user-has-not-earned';
+	$earned_status = badgeos_get_user_achievements( array( 'user_id' => $user_id, 'achievement_id' => absint( $achievement->ID ) ) ) ? 'user-has-earned' : 'user-has-not-earned';
 
 	// Setup our credly classes
 	$credly_class = '';
 	$credly_ID = '';
 
 	// If the achievement is earned and givable, override our credly classes
-	if ( 'user-has-earned' == $earned_status && $giveable = credly_is_achievement_giveable( $achievement->ID, $user_ID ) ) {
+	if ( 'user-has-earned' == $earned_status && $giveable = credly_is_achievement_giveable( $achievement->ID, $user_id ) ) {
 		$credly_class = ' share-credly addCredly';
 		$credly_ID = 'data-credlyid="'. absint( $achievement->ID ) .'"';
 	}
@@ -461,7 +466,7 @@ function badgeos_render_achievement( $achievement = 0 ) {
 		// Achievement Image
 		$output .= '<div class="badgeos-item-image">';
         // If multiple earnings, display the count with the achievement image
-        $output .= badgeos_render_achievement_counts($achievement->ID, $user_ID);
+        $output .= badgeos_render_achievement_counts($achievement->ID, $user_id);
 		$output .= '<a href="' . get_permalink( $achievement->ID ) . '">' . badgeos_get_achievement_post_thumbnail( $achievement->ID ) . '</a>';
 		$output .= '</div><!-- .badgeos-item-image -->';
 
@@ -498,11 +503,17 @@ function badgeos_render_achievement( $achievement = 0 ) {
 /**
  * AJAX Helper for customizing rendering of achievement based on layout.
  * Curently, can display List view (do nothing) or Grid view
+ * @param  integer $achievement The achievement's post ID
+ * @param  integer $user_id The ID of user point of view we'd like
  *
  * @return achievement
  */
-function badgeos_grid_render_achievement ( $achievement = 0 ){
-	global $user_ID;
+function badgeos_grid_render_achievement ( $achievement = 0, $user_id = 0 ){
+    // Grab the current user's ID if none was specifed
+	if ( ! $user_id ) {
+	    global $user_ID;
+        $user_id = $user_ID;
+    }
 
 	// If we were given an ID, get the post
 	if ( is_numeric( $achievement ) )
@@ -513,14 +524,14 @@ function badgeos_grid_render_achievement ( $achievement = 0 ){
 	wp_enqueue_style( 'badgeos-widget' );
 
 	// check if user has earned this Achievement, and add an 'earned' class
-	$earned_status = badgeos_get_user_achievements( array( 'user_id' => $user_ID, 'achievement_id' => absint( $achievement->ID ) ) ) ? 'user-has-earned' : 'user-has-not-earned';
+	$earned_status = badgeos_get_user_achievements( array( 'user_id' => $user_id, 'achievement_id' => absint( $achievement->ID ) ) ) ? 'user-has-earned' : 'user-has-not-earned';
 
 	// Setup our credly classes
 	$credly_class = '';
 	$credly_ID = '';
 
 	// If the achievement is earned and givable, override our credly classes
-	if ( 'user-has-earned' == $earned_status && $giveable = credly_is_achievement_giveable( $achievement->ID, $user_ID ) ) {
+	if ( 'user-has-earned' == $earned_status && $giveable = credly_is_achievement_giveable( $achievement->ID, $user_id ) ) {
 		$credly_class = ' share-credly addCredly';
 		$credly_ID = 'data-credlyid="'. absint( $achievement->ID ) .'"';
 	}
@@ -532,7 +543,7 @@ function badgeos_grid_render_achievement ( $achievement = 0 ){
 		// Achievement Image
 		$output .= '<div class="badgeos-item-image">';
         // If multiple earnings, display the count with the achievement image
-        $output .= badgeos_render_achievement_counts($achievement->ID, $user_ID);
+        $output .= badgeos_render_achievement_counts($achievement->ID, $user_id);
 		$output .= '<a href="' . get_permalink( $achievement->ID ) . '" onmouseover="displayDescription('.$achievement->ID.')" onmouseout="hideDescription('.$achievement->ID.')" onclick="hideDescription('.$achievement->ID.')">' . badgeos_get_achievement_post_thumbnail( $achievement->ID ) . '</a>';
 		$output .= '</div><!-- .badgeos-item-image -->';
         $output .= '<div class="badgeos-item-short-description" id="description-'.$achievement->ID.'">'.$achievement->post_excerpt;
