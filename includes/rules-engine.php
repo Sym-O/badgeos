@@ -331,9 +331,10 @@ function badgeos_user_has_access_to_achievement( $user_id = 0, $achievement_id =
 	if ( $return && $parent_achievement = badgeos_get_parent_of_achievement( $achievement_id ) ) {
 
 		// If we don't have access to the parent, we do not have access to this
-		if ( ! badgeos_user_has_access_to_achievement( $user_id, $parent_achievement->ID, $this_trigger, $site_id, $args ) ) {
-			$return = false;
-		}
+        // Quick Fix to issue #458 of Badgeos project : This test causes problem to define user access to an achievement when parent relationship
+		// if ( ! badgeos_user_has_access_to_achievement( $user_id, $parent_achievement->ID, $this_trigger, $site_id, $args ) ) {
+		// 	$return = false;
+		// }
 
 		// If the parent requires sequential steps, confirm we've earned all previous steps
 		if ( $return && badgeos_is_achievement_sequential( $parent_achievement->ID ) ) {
