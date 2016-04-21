@@ -265,7 +265,7 @@ function badgeos_get_required_achievements_for_achievement_list_markup( $steps =
 	}
 	$post_type_object = get_post_type_object( $step->post_type );
 
-	$output .= '<h4>' . apply_filters( 'badgeos_steps_heading', sprintf( __( '%Required %1$s', 'badgeos' ), $post_type_object->labels->name ), $steps ) . '</h4>';
+	$output .= '<h4>' . apply_filters( 'badgeos_steps_heading', sprintf( __( 'Required %1$s', 'badgeos' ), $post_type_object->labels->name ), $steps ) . '</h4>';
 	$output .= '<' . $container .' class="badgeos-required-achievements">';
 	$output .= $step_output;
 	$output .= '</'. $container .'><!-- .badgeos-required-achievements -->';
