@@ -352,7 +352,7 @@ function badgeos_process_user_data() {
 			check_admin_referer( 'badgeos_award_achievement' );
 
 			// Award the achievement
-			badgeos_award_achievement_to_user( absint( $_GET['achievement_id'] ), absint( $_GET['user_id'] ) );
+			badgeos_award_achievement_to_user( absint( $_GET['achievement_id'] ), absint( $_GET['user_id'] ), 'admin' );
 
 			// Redirect back to the user editor
 			wp_redirect( add_query_arg( 'user_id', absint( $_GET['user_id'] ), admin_url( 'user-edit.php' ) ) );

@@ -871,3 +871,128 @@ function badgeos_render_feedback_buttons( $feedback_id = 0 ) {
 	// Return our filterable output
 	return apply_filters( 'badgeos_render_feedback_buttons', $output, $feedback_id );
 }
+
+/**
+ * Action triggered when an achievement is obtained.
+ * 
+ * A notification email is sent to the user identified by user_id
+ * if the achievement is a submission or a nomination which just got approved, no email is sent
+ * The email message is collected from a textarea in the badgeos_settings.
+ * 
+ * @param  integer $user_id The ID of the user who earned the achievement
+ * @param  integer $achievement_id The ID of the achievement earned
+ * @param  string  $trigger Indicates the context of call, it can be
+ * whether 'admin', 'approve_submission' or ''
+ */
+function badgeos_notify_users($user_id = 0, $achievement_id = 0, $trigger = '') {
+    $badgeos_settings = get_option('badgeos_settings');
+    $m = $badgeos_settings['email_notification_message'];
+
+    if (strcmp($m, '') == 0) {//for backward compatibility
+        return;
+    }
+
+    if (strcmp($trigger, 'approve_submission') == 0) {
+        return;
+    }
+    
+    $post_type = get_post_type($achievement_id);
+    if(strcmp($post_type, 'step') == 0) {
+        return;
+    }
+
+    $how_the_achievement_was_earned .= 'par intervention divine.';
+    if (strcmp($trigger, 'admin') !== 0) {
+        $earned_by_type = get_post_meta($achievement_id, '_badgeos_earned_by', true);
+        $how_the_achievement_was_earned = '';
+        if (strcmp($earned_by_type, 'triggers') == 0) {
+            $how_the_achievement_was_earned .= 'suite à la validation des étapes suivantes: <br/> <ul>';
+            $required_steps = get_posts(array(
+                'post_type' => 'step',
+                'posts_per_page' => -1,
+                'suppress_filters' => false,
+                'connected_direction' => 'to',
+                'connected_type' => 'step-to-' . $post_type,
+                'connected_items' => $achievement_id,
+            ));
+
+            // Loop through each step 
+            foreach ($required_steps as $required_step) {
+                $how_the_achievement_was_earned .= '<li>' . get_the_title($required_step) . '</li>';
+            }
+            $how_the_achievement_was_earned .= '</ul>';
+        }
+    }
+
+    $achievement_title = get_the_title($achievement_id);
+
+    //replacement of shortcodes in the standard message in badgeos_settings
+    $to_replace = array("[achievement]", "[how_achievement_was_obtained]", "[achievement_link]", "[additionnal_content]");
+    $newstrs = array($achievement_title, $how_the_achievement_was_earned,
+        get_permalink($achievement_id), '');
+    $m = str_replace($to_replace, $newstrs, $m);
+
+    $user = get_user_by('id', $user_id);
+    $recipient = esc_html($user->user_email);
+    $email = array(
+        'object' => sprintf('★ %s ★', $achievement_title),
+        'message' => $m
+    );
+    wp_mail($recipient, $email['object'], wordwrap($email['message']));
+}
+
+add_action('badgeos_award_achievement', 'badgeos_notify_users', 10, 3);
+
+/**
+ * Filters the notification message for submissions and nominations.
+ * The message is taken from a standard message in the badgeos_settings.
+ * 
+ * @param  array $messages An array containing the email message to send along with the subject and the email adress
+ * @param  array $args An array containing information about the submission/nomination
+ */
+function badgeos_modify_message_submission_or_nomination_approved($messages, $args) {
+    $badgeos_settings = get_option('badgeos_settings');
+    $m = $badgeos_settings['email_notification_message'];
+
+    if (strcmp($m, '') == 0) { //for backward compatibility
+        return $messages;
+    }
+
+    $submission_type = $args['submission_type']; //nomination or submission
+    $message_id = 'badgeos_' . $submission_type . '_approved';
+    $email = $args['user_data']->user_email;
+    if ($args['auto']) {
+        //$message_id = 'badgeos_submission_auto_approved';
+        //$email = $args[ 'submission_email_addresses' ];
+        return $messages;
+    }
+
+    $subject = sprintf('★ %s ★', get_the_title($args['achievement_id']));
+
+    $how_the_achievement_was_earned;
+    $submission_content;
+
+    if (strcmp($submission_type, 'nomination') == 0) {
+        $how_the_achievement_was_earned = 'par nomination de : ' . $args['from_user_data']->display_name;
+        $submission_content = sprintf('Son message : <br/><q>%1$s</q>', get_post($args['submission_id'])->post_content);
+    } else { //submission
+        $how_the_achievement_was_earned = 'suite à ta demande.';
+        $submission_content = sprintf('Ton message : <br/><q>%1$s</q>', get_post($args['submission_id'])->post_content);
+    }
+
+    $to_replace = array("[achievement]", "[how_achievement_was_obtained]", "[achievement_link]", "[additionnal_content]");
+    $newstrs = array(get_the_title($args['achievement_id']), $how_the_achievement_was_earned,
+        get_permalink($args['achievement_id']), $submission_content);
+    $m = str_replace($to_replace, $newstrs, $m);
+
+    $messages[$message_id] = array(
+        'email' => $email,
+        'subject' => $subject,
+        'message' => $m
+    );
+
+    return $messages;
+}
+
+add_filter('badgeos_notifications_submission_approved_messages', 'badgeos_modify_message_submission_or_nomination_approved', 11, 2);
+add_filter('badgeos_notifications_nomination_approved_messages', 'badgeos_modify_message_submission_or_nomination_approved', 11, 2);

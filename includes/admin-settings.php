@@ -259,6 +259,7 @@ function badgeos_settings_page() {
 			$submission_email_addresses = ( isset( $badgeos_settings['submission_email_addresses'] ) ) ? $badgeos_settings['submission_email_addresses'] : '';
 			$debug_mode = ( isset( $badgeos_settings['debug_mode'] ) ) ? $badgeos_settings['debug_mode'] : 'disabled';
 			$ms_show_all_achievements = ( isset( $badgeos_settings['ms_show_all_achievements'] ) ) ? $badgeos_settings['ms_show_all_achievements'] : 'disabled';
+                        $email_notification_message = ( isset( $badgeos_settings['email_notification_message'] ) ) ? $badgeos_settings['email_notification_message'] : '';
 
 			wp_nonce_field( 'badgeos_settings_nonce', 'badgeos_settings_nonce' );
 			?>
@@ -295,6 +296,11 @@ function badgeos_settings_page() {
 					<td>
 						<input id="submission_email_addresses" name="badgeos_settings[submission_email_addresses]" type="text" value="<?php echo esc_attr( $submission_email_addresses ); ?>" class="regular-text" />
 						<p class="description"><?php _e( 'Comma-separated list of email addresses to send submission/nomination notifications, in addition to the Site Admin email.', 'badgeos' ); ?></p>
+					</td>
+				</tr>
+                                <tr valign="top"><th scope="row"><label for="email notification message"><?php _e( 'Email notification message:', 'badgeos' ); ?></label></th>
+					<td>
+                                                <textarea id="email_notification_message" name="badgeos_settings[email_notification_message]" cols="80" rows="10"><?php echo esc_textarea( $email_notification_message ); ?></textarea>
 					</td>
 				</tr>
 				<tr valign="top"><th scope="row"><label for="debug_mode"><?php _e( 'Debug Mode:', 'badgeos' ); ?></label></th>
