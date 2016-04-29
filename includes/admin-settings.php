@@ -187,6 +187,57 @@ function badgeos_credly_api_key_errors() {
 }
 
 /**
+ * create csv file of all achievements the achievements earned by the users
+ * @return void
+ */
+function badgeos_export_reporting_d2si() {
+	$export_date = date('_j-m-Y');
+	$file_name = "reporting_badgeos" . $export_date . ".csv";
+	// try open/create file before resume. if can't, nothing happens.
+	if (($file = fopen($file_name, "w+"))) {
+		// prepare file for any type of characters & add title for the different columns.
+		fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+		fputcsv($file, array("ID user", "Achivement", "Type", "Action", "Date"), ";");
+
+		// obtention of all log entries 
+		$args = array('post_type' => 'badgeos-log-entry', 'posts_per_page' => -1, 'post_status' => 'any', 'post_parent' => null);
+		$log_entries = get_posts($args);
+
+		// for every achievement, put in variables the elements for the csv file.
+		foreach ($log_entries as $log_entry) {
+			$username = get_userdata($log_entry->post_author);
+			$log_entry_date = $log_entry->post_modified;
+			$log_entry_meta = get_post_meta($log_entry->ID);
+			$achievement = get_post($log_entry_meta[_badgeos_log_achievement_id][0]);
+            $achievement_title = $achievement->post_title;
+            $achievement_type = get_post_type($achievement);
+            $action = "null";
+
+            if (strrpos($log_entry->post_name,"unlocked")) {
+                $action = "unlocked";
+            } else if (strrpos($log_entry->post_name,"wp_login")) {
+                $action = "login";
+                $achievement_title = "none";
+                $achievement_type = "none";
+            } else if (strrpos($log_entry->post_name,"set-goal")) {
+                $action = "set-goal";
+            } else if (strrpos($log_entry->post_name,"remove-goal")) {
+                $action = "remove-goal";
+            } else if (strrpos($log_entry->post_name,"achieve-goal")) {
+                $action = "achieve-goal";
+            } else if (strrpos($log_entry->post_name,"-credly",7)) {
+                $action = "credly";
+            }
+            if ($action != "null") fputcsv($file, array($username->user_login, $achievement_title, $achievement_type, $action, $log_entry_date), ";");	
+
+		}
+
+		// after filling the file, close it.
+		fclose($file);
+	}
+}
+
+/**
  * BadgeOS main settings page output
  * @since  1.0.0
  * @return void
@@ -271,14 +322,25 @@ function badgeos_settings_page() {
 					}
 				}
 				do_action( 'badgeos_settings', $badgeos_settings ); ?>
-			</table>
-			<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e( 'Save Settings', 'badgeos' ); ?>" />
-			</p>
-			<!-- TODO: Add settings to select WP page for archives of each achievement type.
-				See BuddyPress' implementation of this idea.  -->
-		</form>
-	</div>
+                        </table>
+                            <p class="submit">
+                                <input type="submit" class="button-primary" value="<?php _e('Save Settings', 'badgeos'); ?>" />
+                            </p>
+                            <!-- TODO: Add settings to select WP page for archives of each achievement type.
+                                    See BuddyPress' implementation of this idea.  -->
+                    </form>
+                    <h2><?php _e('Reporting export actions', 'badgeos'); ?></h2>
+                    <p class="submit">
+                        <input 	type="submit" class="button" 
+                                onclick="location.href='<?php
+                                $fileNameDate = date('_j-m-Y');
+                                $fileName = "reporting_badgeos" . $fileNameDate . ".csv";
+                                badgeos_export_reporting_d2si();
+                                echo $fileName;
+                                ?>';" 
+                                value="Reporting CSV BadgeOS" />
+                    </p>
+            </div>
 	<?php
 }
 
