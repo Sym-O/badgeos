@@ -828,7 +828,7 @@ function badgeos_set_submission_status_nomination_pending( $messages, $args ) {
 	return $messages;
 
 }
-add_filter( 'badgeos_notifications_submission_pending_messages', 'badgeos_set_submission_status_submission_pending', 10, 2 );
+add_filter( 'badgeos_notifications_nomination_pending_messages', 'badgeos_set_submission_status_nomination_pending', 10, 2 );
 
 /**
  * Returns the comment form for Submissions
