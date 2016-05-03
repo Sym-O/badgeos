@@ -198,8 +198,10 @@ function badgeos_submission_column_action( $column = '' ) {
 		case 'status':
 
 			$status = ( get_post_type( $post ) == 'submission' ) ? get_post_meta( $post->ID, '_badgeos_submission_status', true ) : get_post_meta( $post->ID, '_badgeos_nomination_status', true );
-			$status = ( $status ) ? $status : __( 'pending', 'badgeos' );
-			echo esc_html( $status );
+			$status = ( $status ) ? ucfirst($status) : __( 'pending', 'badgeos' );
+                        $status = '<div class=\'badgeos-feedback-'.$post->ID.'\'><span class =\'badgeos-feedback-status\'>'.$status.'</span></div>';
+			echo $status;
+                        echo badgeos_render_feedback_buttons($post->ID);
 			break;
 
 		case 'user':
