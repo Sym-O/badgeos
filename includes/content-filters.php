@@ -693,7 +693,7 @@ function badgeos_render_nomination( $nomination = null, $args = array() ) {
 		// Approval Status
 		$output .= '<p class="badgeos-comment-date-by">';
 			$output .= '<span class="badgeos-status-label">' . __( 'Status:', 'badgeos' ) . '</span> ';
-			$output .= get_post_meta( $nomination->ID, '_badgeos_nomination_status', true );
+			$output .= ucfirst(get_post_meta( $nomination->ID, '_badgeos_nomination_status', true ));
 		$output .= '</p>';
 
 		// Approve/Deny Buttons for admins only

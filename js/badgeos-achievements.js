@@ -65,6 +65,23 @@ jQuery( function( $ ) {
 	$body.on( 'click', '.badgeos-feedback-buttons .button', function( event ) {
 		event.preventDefault();
 		var $button = $( this );
+                //We get the current_status of the nomination or the submission
+                var feedback_type = $button.siblings( 'input[name=feedback_type]' ).val();
+                var current_status = $('.cmb_id__badgeos_'+ feedback_type + '_current td').text();//status in the nomination/submission edit screen
+                if(current_status == "") {//we will check the status in the nomination/submission listing screen or the rendering page of the submission
+                    current_status = $( '.badgeos-feedback-' + $button.data( 'feedback-id' ) + ' .badgeos-feedback-status' ).text();
+                    if(current_status == "") {//we will check in the rendering page of the nomination
+                        current_status = $( '.badgeos-feedback-' + $button.data( 'feedback-id' ) + ' .badgeos-comment-date-by' ).text().replace("Status: ", "");
+                    }
+                }
+                //We prevent from approving or denying twice
+                if(($button.hasClass("approve") && current_status == 'Approved')
+                        || ($button.hasClass("deny") && current_status == 'Denied')) {
+                    $( '.badgeos-feedback-response', $button.parent() ).remove();
+                    var response = $('<p class="badgeos-feedback-response success">Status already up-to-date !</p>');
+	            response.appendTo( $button.parent() ).fadeOut( 3000 );
+                    return;
+                }
 		$.ajax( {
 			url : badgeos_feedback_buttons.ajax_url,
 			data : {
@@ -83,7 +100,7 @@ jQuery( function( $ ) {
 				$( response.data.message ).appendTo( $button.parent() ).fadeOut( 3000 );
 				$( '.badgeos-feedback-' + $button.data( 'feedback-id' ) + ' .badgeos-feedback-status' ).html( response.data.status );
 				$( '.cmb_id__badgeos_submission_current td, .cmb_id__badgeos_nomination_current td' ).html( response.data.status );
-				$( '.badgeos-comment-date-by' ).html( '<span class="badgeos-status-label">Status:</span> '+ response.data.status );
+				$( '.badgeos-feedback-' + $button.data( 'feedback-id' ) + ' .badgeos-comment-date-by' ).html( '<span class="badgeos-status-label">Status:</span> '+ response.data.status );
 			}
 		} );
 	} );
