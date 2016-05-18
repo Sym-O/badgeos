@@ -489,7 +489,11 @@ function badgeos_set_submission_status( $submission_id, $status, $args = array()
 	$args[ 'submission_email_addresses' ] = $email;
 
 	update_post_meta( $submission_id, '_badgeos_' . $submission_type . '_status', $status );
-
+        
+        if(strcmp($status,'approved') == 0) {
+            badgeos_award_achievement_to_user( $args[ 'achievement_id' ], $args[ 'user_id' ], 'approve_submission' ,0, $args);
+        }
+        else {        
 	$email_messages = array();
 	$email_messages = apply_filters( 'badgeos_notifications_' . $submission_type . '_' . $args[ 'old_status' ] . '_to_' . $status . '_messages', $email_messages, $args );
 	$email_messages = apply_filters( 'badgeos_notifications_' . $submission_type . '_' . $status . '_messages', $email_messages, $args );
@@ -503,6 +507,7 @@ function badgeos_set_submission_status( $submission_id, $status, $args = array()
 		'attachments' => array()
 	);
 
+        add_filter('wp_mail_content_type', 'set_html_content_type');
 	foreach ( $email_messages as $email_message ) {
 		$email_message = wp_parse_args( $email_message, $default_message );
 
@@ -520,6 +525,8 @@ function badgeos_set_submission_status( $submission_id, $status, $args = array()
 			}
 		}
 	}
+        remove_filter('wp_mail_content_type', 'set_html_content_type');
+        }
 
 }
 

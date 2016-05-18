@@ -883,8 +883,10 @@ function badgeos_render_feedback_buttons( $feedback_id = 0 ) {
  * @param  integer $achievement_id The ID of the achievement earned
  * @param  string  $trigger Indicates the context of call, it can be
  * whether 'admin', 'approve_submission' or ''
+ * @param integer $site_id The triggered site id
+ * @param array $args The triggered args
  */
-function badgeos_notify_users($user_id = 0, $achievement_id = 0, $trigger = '') {
+function badgeos_notify_users($user_id = 0, $achievement_id = 0, $trigger = '', $site_id = 0, $args = array()) {
     $badgeos_settings = get_option('badgeos_settings');
     $m = $badgeos_settings['email_notification_message'];
 
@@ -892,17 +894,25 @@ function badgeos_notify_users($user_id = 0, $achievement_id = 0, $trigger = '') 
         return;
     }
 
-    if (strcmp($trigger, 'approve_submission') == 0) {
-        return;
-    }
-    
     $post_type = get_post_type($achievement_id);
-    if(strcmp($post_type, 'step') == 0) {
+    if (strcmp($post_type, 'step') == 0) {
         return;
     }
 
-    $how_the_achievement_was_earned .= 'par intervention divine.';
-    if (strcmp($trigger, 'admin') !== 0) {
+    $how_the_achievement_was_earned = 'par intervention divine.';
+    $submission_content = '';
+
+    if (strcmp($trigger, 'approve_submission') == 0) {
+        $submission_type = $args['submission_type'];
+        if (strcmp($submission_type, 'nomination') == 0) {
+            $how_the_achievement_was_earned = 'par nomination de : ' . $args['from_user_data']->display_name;
+            $submission_content = sprintf('Son message : <br/><q>%1$s</q>', get_post($args['submission_id'])->post_content);
+        } else { //submission
+            $how_the_achievement_was_earned = 'suite à ta demande.';
+            $submission_content = sprintf('Ton message : <br/><q>%1$s</q>', get_post($args['submission_id'])->post_content);
+        }
+        
+    } else if (strcmp($trigger, 'admin') !== 0) {
         $earned_by_type = get_post_meta($achievement_id, '_badgeos_earned_by', true);
         $how_the_achievement_was_earned = '';
         if (strcmp($earned_by_type, 'triggers') == 0) {
@@ -929,7 +939,7 @@ function badgeos_notify_users($user_id = 0, $achievement_id = 0, $trigger = '') 
     //replacement of shortcodes in the standard message in badgeos_settings
     $to_replace = array("[achievement]", "[how_achievement_was_obtained]", "[achievement_link]", "[additionnal_content]");
     $newstrs = array($achievement_title, $how_the_achievement_was_earned,
-        get_permalink($achievement_id), '');
+        get_permalink($achievement_id), $submission_content);
     $m = str_replace($to_replace, $newstrs, $m);
 
     $user = get_user_by('id', $user_id);
@@ -938,10 +948,12 @@ function badgeos_notify_users($user_id = 0, $achievement_id = 0, $trigger = '') 
         'object' => sprintf('★ %s ★', $achievement_title),
         'message' => $m
     );
+    add_filter('wp_mail_content_type', 'set_html_content_type');
     wp_mail($recipient, $email['object'], wordwrap($email['message']));
+    remove_filter('wp_mail_content_type', 'set_html_content_type');
 }
 
-add_action('badgeos_award_achievement', 'badgeos_notify_users', 10, 3);
+add_action('badgeos_award_achievement', 'badgeos_notify_users', 10, 5);
 
 /**
  * Filters the notification message for submissions and nominations.
@@ -950,7 +962,7 @@ add_action('badgeos_award_achievement', 'badgeos_notify_users', 10, 3);
  * @param  array $messages An array containing the email message to send along with the subject and the email adress
  * @param  array $args An array containing information about the submission/nomination
  */
-function badgeos_modify_message_submission_or_nomination_approved($messages, $args) {
+/*function badgeos_modify_message_submission_or_nomination_approved($messages, $args) {
     $badgeos_settings = get_option('badgeos_settings');
     $m = $badgeos_settings['email_notification_message'];
 
@@ -995,4 +1007,4 @@ function badgeos_modify_message_submission_or_nomination_approved($messages, $ar
 }
 
 add_filter('badgeos_notifications_submission_approved_messages', 'badgeos_modify_message_submission_or_nomination_approved', 11, 2);
-add_filter('badgeos_notifications_nomination_approved_messages', 'badgeos_modify_message_submission_or_nomination_approved', 11, 2);
+add_filter('badgeos_notifications_nomination_approved_messages', 'badgeos_modify_message_submission_or_nomination_approved', 11, 2);*/
