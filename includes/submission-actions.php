@@ -50,7 +50,7 @@ function badgeos_create_nomination( $achievement_id  = 0, $title = '', $content 
 
 		$submission_data = array(
 			'post_title'	=>	esc_html( $title ),
-			'post_content'	=>	esc_textarea( $content ),
+			'post_content'	=>	apply_filters('badgeos_clean_apostrophes', esc_textarea( $content )),
 			'post_status'	=>	'publish',
 			'post_author'	=>	absint( $user_nominated ),
 			'post_type'		=>	'nomination',
@@ -329,7 +329,7 @@ function badgeos_save_submission_data() {
 	return badgeos_create_submission(
 		absint( $_POST['achievement_id'] ),
 		sprintf( '%1$s: %2$s', get_post_type( absint( $_POST['achievement_id'] ) ), get_the_title( absint( $_POST['achievement_id'] ) ) ),
-		esc_textarea( $_POST['badgeos_submission_content'] ),
+		apply_filters('badgeos_clean_apostrophes', esc_textarea( $_POST['badgeos_submission_content'] )),
 		absint( $_POST['user_id'] )
 	);
 }
