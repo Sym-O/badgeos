@@ -348,7 +348,3 @@ function badgeos_is_debug_mode() {
 if (!function_exists('set_html_content_type')) {
    function set_html_content_type() { return 'text/html'; }
 }
-
-function unescape_characters($string) {
-    return str_replace('&amp;#039;', '\'', $string);
-}
