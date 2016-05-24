@@ -46,7 +46,7 @@ function badgeos_save_nomination_data() {
  */
 function badgeos_create_nomination( $achievement_id  = 0, $title = '', $content = '', $user_nominated  = 0, $user_nominating = 0 ) {
 
-	if ( ! badgeos_check_if_user_has_nomination( absint( $user_nominated ), absint( $achievement_id ) ) ) {
+	//if ( ! badgeos_check_if_user_has_nomination( absint( $user_nominated ), absint( $achievement_id ) ) ) {
 
 		$submission_data = array(
 			'post_title'	=>	esc_html( $title ),
@@ -87,7 +87,7 @@ function badgeos_create_nomination( $achievement_id  = 0, $title = '', $content 
 
 		}
 
-	}
+	//}
 }
 
 /**
@@ -1086,7 +1086,7 @@ function badgeos_user_has_access_to_submission_form( $user_id = 0, $achievement_
 	}
 
 	// If the user has access, look for pending submissions
-	if ( $has_access ) {
+	/*if ( $has_access ) {
 		$pending_submissions = get_posts( array(
 			'post_type'   => 'submission',
 			'author'      => absint( $user_id ),
@@ -1108,7 +1108,7 @@ function badgeos_user_has_access_to_submission_form( $user_id = 0, $achievement_
 		if ( ! empty( $pending_submissions ) ) {
 			$has_access = false;
 		}
-	}
+	}*/
 
 	return apply_filters( 'badgeos_user_has_access_to_submission_form', $has_access, $user_id, $achievement_id );
 }
