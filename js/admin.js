@@ -58,4 +58,16 @@ jQuery(document).ready(function($) {
        $('tr.iedit.type-nomination.status-pending .post-state').text("Nomination approved");
        $('tr.iedit.type-submission.status-pending .post-state').text("Submission approved");
        
+       //Replace the 'pending posts' tab's text
+       function replace_pending_message(elem, message) {
+       var count = elem.children('.count').detach();
+       elem.empty();
+       elem.append('<span>' + message + '</span>');
+       elem.append(count);
+       }
+       var a_tag_for_nomination = $('body.post-type-nomination ul.subsubsub li.pending a');
+       var a_tag_for_submission = $('body.post-type-submission ul.subsubsub li.pending a');
+       replace_pending_message(a_tag_for_nomination, 'Approved nominations ');
+       replace_pending_message(a_tag_for_submission, 'Approved submissions ');
+       
 });
