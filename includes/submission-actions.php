@@ -492,6 +492,11 @@ function badgeos_set_submission_status( $submission_id, $status, $args = array()
         
         if(strcmp($status,'approved') == 0) {
             badgeos_award_achievement_to_user( $args[ 'achievement_id' ], $args[ 'user_id' ], 'approve_submission' ,0, $args);
+            $my_post = array();
+            $my_post['ID'] = $submission_id;
+            $my_post['post_status'] = 'pending';
+            // Update the post status to 'pending' once approved
+            wp_update_post( $my_post );
         }
         else {        
 	$email_messages = array();

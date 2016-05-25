@@ -54,4 +54,8 @@ jQuery(document).ready(function($) {
 			$('.credly-notifications-message').hide();
 	}).change();
 
+       //Change the text for pending nominations/submissions in the edit screen
+       $('tr.iedit.type-nomination.status-pending .post-state').text("Nomination approved");
+       $('tr.iedit.type-submission.status-pending .post-state').text("Submission approved");
+       
 });
